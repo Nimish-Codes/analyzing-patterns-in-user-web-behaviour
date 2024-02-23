@@ -80,7 +80,7 @@ user_input['Month'] = months.index(user_input['Month']) + 1
 user_input['Weekend'] = 1 if user_input['Weekend'] == "Yes" else 0
 
 # Drop unnecessary columns
-user_input.pop('VisitorType_Returning_Visitor')
+# user_input.pop('VisitorType_Returning_Visitor')
 
 # Validate user input
 if 'Month' not in user_input or 'Weekend' not in user_input:
