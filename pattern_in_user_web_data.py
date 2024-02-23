@@ -39,6 +39,37 @@ st.title("Online Shopper's Purchase Intention Prediction")
 
 # User input
 st.header("Enter Session Information")
+# Function to print user guide
+def print_user_guide():
+    st.header("User Guide")
+    st.write("Welcome! Please provide the following information for predicting online shopper's purchase intention:")
+    st.write("\n1. Administrative: Number of pages related to account management or settings visited during your session.")
+    st.write("   Example: Login page, account settings page.")
+    st.write("2. Administrative Duration: Total time (in seconds) spent on administrative pages.")
+    st.write("3. Informational: Number of pages containing general information visited during your session.")
+    st.write("   Example: FAQ page, help guide.")
+    st.write("4. Informational Duration: Total time (in seconds) spent on informational pages.")
+    st.write("5. ProductRelated: Number of pages related to products or services visited during your session.")
+    st.write("   Example: Product listing page, product detail page.")
+    st.write("6. ProductRelated Duration: Total time (in seconds) spent on product-related pages.")
+    st.write("7. BounceRates: Percentage of visitors who leave the website after viewing only one page.")
+    st.write("   A high bounce rate may indicate visitors did not find the content engaging.")
+    st.write("8. ExitRates: Percentage of visitors who leave the website from a specific page.")
+    st.write("   It helps identify pages where users are most likely to exit the site.")
+    st.write("9. PageValues: Average value of the pages visited during your session.")
+    st.write("   Higher page values indicate pages contributing more to conversions.")
+    st.write("10. SpecialDay: Closeness of the session to a special day (normalized).")
+    st.write("    Example: Valentine's Day, Black Friday.")
+    st.write("11. Month: Month of the session.")
+    st.write("12. OperatingSystems: Operating system used during the session.")
+    st.write("13. Browser: Web browser used during the session.")
+    st.write("14. Region: Geographical region of the user.")
+    st.write("15. TrafficType: Type of traffic source through which the user arrived at the website.")
+    st.write("16. VisitorType: Type of visitor to the website (Returning Visitor).")
+    st.write("17. Weekend: Whether the session occurred on a weekend.")
+
+# Print user guide
+print_user_guide()
 
 # Collect user input
 user_input = {}
