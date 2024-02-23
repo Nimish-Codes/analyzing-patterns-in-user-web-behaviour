@@ -73,14 +73,28 @@ user_input['Month'] = st.selectbox("Month", months)
 # Weekend selection
 user_input['Weekend'] = st.radio("Weekend", ["Yes", "No"])
 
-# Convert 'Month' to numerical value
-user_input['Month'] = months.index(user_input['Month']) + 1
+# Operating System dropdown
+st.subheader("Select Operating System")
+os_names = {1: "Windows", 2: "Macintosh", 3: "Linux", 4: "Other"}
+user_input['OperatingSystems'] = st.selectbox("Operating System", list(os_names.values()))
 
-# Convert 'Weekend' to binary
-user_input['Weekend'] = 1 if user_input['Weekend'] == "Yes" else 0
+# Browser dropdown
+st.subheader("Select Browser")
+browser_names = {1: "IE", 2: "Firefox", 3: "Chrome", 4: "Safari", 5: "Others"}
+user_input['Browser'] = st.selectbox("Browser", list(browser_names.values()))
+
+# Region dropdown
+st.subheader("Select Region")
+region_names = {1: "Region 1", 2: "Region 2", 3: "Region 3", 4: "Region 4", 5: "Region 5", 6: "Region 6", 7: "Region 7", 8: "Region 8", 9: "Region 9"}
+user_input['Region'] = st.selectbox("Region", list(region_names.values()))
+
+# Traffic Type dropdown
+st.subheader("Select Traffic Type")
+traffic_names = {1: "Type 1", 2: "Type 2", 3: "Type 3", 4: "Type 4", 5: "Type 5", 6: "Type 6", 7: "Type 7", 8: "Type 8", 9: "Type 9"}
+user_input['TrafficType'] = st.selectbox("Traffic Type", list(traffic_names.values()))
 
 # Drop unnecessary columns
-# user_input.pop('VisitorType_Returning_Visitor')
+# user_input.pop('VisitorType_Returning_Visitor')  # Remove this line
 
 # Validate user input
 if 'Month' not in user_input or 'Weekend' not in user_input:
