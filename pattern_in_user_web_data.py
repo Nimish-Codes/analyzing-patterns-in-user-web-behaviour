@@ -1,14 +1,11 @@
 import pandas as pd
+import streamlit as st
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler, LabelEncoder
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, classification_report, roc_auc_score
 from urllib.request import urlretrieve
 
-# URL of the dataset
-url = "https://archive.ics.uci.edu/ml/machine-learning-databases/00468/online_shoppers_intention.csv"
-
 # Download the dataset
+url = "https://archive.ics.uci.edu/ml/machine-learning-databases/00468/online_shoppers_intention.csv"
 urlretrieve(url, "online_shoppers_intention.csv")
 
 # Load dataset
@@ -66,46 +63,10 @@ X_scaled = scaler.fit_transform(X)
 model = RandomForestClassifier(n_estimators=100, random_state=42)
 model.fit(X_scaled, y)
 
-# Function to get user input and make predictions
-def predict_user_input(model, scaler, label_encoder):
-    print("Please enter the following details:")
-    # Prompt user for input
-    user_input = {}
-    user_input['Administrative'] = int(input("Administrative: "))
-    user_input['Administrative_Duration'] = float(input("Administrative Duration: "))
-    user_input['Informational'] = int(input("Informational: "))
-    user_input['Informational_Duration'] = float(input("Informational Duration: "))
-    user_input['ProductRelated'] = int(input("Product Related: "))
-    user_input['ProductRelated_Duration'] = float(input("Product Related Duration: "))
-    user_input['BounceRates'] = float(input("Bounce Rates: "))
-    user_input['ExitRates'] = float(input("Exit Rates: "))
-    user_input['PageValues'] = float(input("Page Values: "))
-    user_input['SpecialDay'] = float(input("Special Day: "))
-    user_input['Month_Dec'] = int(input("Month_Dec (0 or 1): "))
-    user_input['Month_Feb'] = int(input("Month_Feb (0 or 1): "))
-    user_input['Month_Jul'] = int(input("Month_Jul (0 or 1): "))
-    user_input['Month_June'] = int(input("Month_June (0 or 1): "))
-    user_input['Month_Mar'] = int(input("Month_Mar (0 or 1): "))
-    user_input['Month_May'] = int(input("Month_May (0 or 1): "))
-    user_input['Month_Nov'] = int(input("Month_Nov (0 or 1): "))
-    user_input['Month_Oct'] = int(input("Month_Oct (0 or 1): "))
-    user_input['Month_Sep'] = int(input("Month_Sep (0 or 1): "))
-    user_input['OperatingSystems'] = int(input("Operating Systems: "))
-    user_input['Browser'] = int(input("Browser: "))
-    user_input['Region'] = int(input("Region: "))
-    user_input['TrafficType'] = int(input("Traffic Type: "))
-    user_input['VisitorType_Other'] = int(input("Visitor Type_Other (0 or 1): "))
-    user_input['VisitorType_Returning_Visitor'] = int(input("Visitor Type_Returning_Visitor (0 or 1): "))
-    user_input['Weekend_True'] = int(input("Weekend_True (0 or 1): "))
-
-    # Print user guide
-    print_user_guide()
-
-    # Convert user input to DataFrame
-    user_df = pd.DataFrame([user_input])
-
+# Define function to make predictions
+def predict_user_input(model, scaler, label_encoder, user_input):
     # Scale user input
-    user_scaled = scaler.transform(user_df)
+    user_scaled = scaler.transform(user_input)
 
     # Make prediction
     prediction = model.predict(user_scaled)
@@ -113,8 +74,58 @@ def predict_user_input(model, scaler, label_encoder):
 
     # Decode prediction
     prediction_label = label_encoder.inverse_transform(prediction)[0]
-    print(f"\nPredicted Revenue: {prediction_label}")
-    print(f"Probability of Revenue: {probability[0]}")
+    return prediction_label, probability[0]
 
-# Predict user input
-predict_user_input(model, scaler, label_encoder)
+# Streamlit UI
+st.title("Online Shopper's Purchase Intention Prediction")
+
+# User input
+st.header("Enter Session Information")
+
+# Collect user input
+user_input = {}
+user_input['Administrative'] = st.number_input("Administrative", value=0)
+user_input['Administrative_Duration'] = st.number_input("Administrative Duration", value=0.0)
+user_input['Informational'] = st.number_input("Informational", value=0)
+user_input['Informational_Duration'] = st.number_input("Informational Duration", value=0.0)
+user_input['ProductRelated'] = st.number_input("Product Related", value=0)
+user_input['ProductRelated_Duration'] = st.number_input("Product Related Duration", value=0.0)
+user_input['BounceRates'] = st.number_input("Bounce Rates", value=0.0)
+user_input['ExitRates'] = st.number_input("Exit Rates", value=0.0)
+user_input['PageValues'] = st.number_input("Page Values", value=0.0)
+user_input['SpecialDay'] = st.number_input("Special Day", value=0.0)
+user_input['Month_Dec'] = st.radio("Month_Dec", [0, 1])
+user_input['Month_Feb'] = st.radio("Month_Feb", [0, 1])
+user_input['Month_Jul'] = st.radio("Month_Jul", [0, 1])
+user_input['Month_June'] = st.radio("Month_June", [0, 1])
+user_input['Month_Mar'] = st.radio("Month_Mar", [0, 1])
+user_input['Month_May'] = st.radio("Month_May", [0, 1])
+user_input['Month_Nov'] = st.radio("Month_Nov", [0, 1])
+user_input['Month_Oct'] = st.radio("Month_Oct", [0, 1])
+user_input['Month_Sep'] = st.radio("Month_Sep", [0, 1])
+user_input['OperatingSystems'] = st.number_input("Operating Systems", value=0)
+user_input['Browser'] = st.number_input("Browser", value=0)
+user_input['Region'] = st.number_input("Region", value=0)
+user_input['TrafficType'] = st.number_input("Traffic Type", value=0)
+user_input['VisitorType_Other'] = st.radio("Visitor Type_Other", [0, 1])
+user_input['VisitorType_Returning_Visitor'] = st.radio("Visitor Type_Returning_Visitor", [0, 1])
+user_input['Weekend_True'] = st.radio("Weekend_True", [0, 1])
+
+st.warning(print_user_guide())
+
+# Display user input
+st.header("Session Information Entered")
+st.write(user_input)
+
+# Button to make prediction
+if st.button("Predict"):
+    # Convert user input to DataFrame
+    user_df = pd.DataFrame([user_input])
+
+    # Make prediction
+    prediction_label, probability = predict_user_input(model, scaler, label_encoder, user_df)
+
+    # Display prediction
+    st.header("Prediction")
+    st.write(f"Predicted Revenue: {prediction_label}")
+    st.write(f"Probability of Revenue: {probability:.2f}")
