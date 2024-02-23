@@ -15,7 +15,7 @@ data = pd.read_csv("online_shoppers_intention.csv")
 data.dropna(inplace=True)
 
 def print_user_guide():
-    print("Welcome! Please provide the following information for predicting online shopper's purchase intention:")
+    ("Welcome! Please provide the following information for predicting online shopper's purchase intention:")
     print("\n1. Administrative: Number of pages related to account management or settings visited during your session.")
     print("   Example: Login page, account settings page.")
     print("2. Administrative Duration: Total time (in seconds) spent on administrative pages.")
