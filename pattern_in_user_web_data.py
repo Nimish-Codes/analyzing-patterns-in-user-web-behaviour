@@ -94,20 +94,13 @@ user_input['TrafficType'] = st.selectbox("Traffic Type", list(traffic_names.valu
 user_input['Weekend'] = st.radio("Weekend", ["Yes", "No"])
 
 # Convert Weekend to binary
-user_input['Weekend_True'] = 1 if user_input['Weekend'] == "Yes" else 0
-
-# Operating Systems, Browser, Region, Traffic Type
-# user_input['OperatingSystems'] = st.selectbox("Operating Systems", [f"OS_{i}" for i in range(1, 9)])
-# user_input['Browser'] = st.selectbox("Browser", [f"Browser_{i}" for i in range(1, 14)])
-# user_input['Region'] = st.selectbox("Region", [f"Region_{i}" for i in range(1, 10)])
-# user_input['TrafficType'] = st.selectbox("Traffic Type", [f"TrafficType_{i}" for i in range(1, 21)])
+user_input['Weekend'] = 1 if user_input['Weekend'] == "Yes" else 0
 
 # Visitor Type
-user_input['VisitorType_Returning_Visitor'] = st.radio("weekend", ["Returning", "New"])  # Set as Returning Visitor
+user_input['VisitorType_Returning_Visitor'] = st.radio("Visitor Type", ["Returning", "New"])  # Set as Returning Visitor
 
 # Convert visitor type to binary
-user_input['VisitorType_Returning_Visitor_True'] = 1 if user_input['VisitorType_Returning_Visitor'] == "Yes" else 0
-
+user_input['VisitorType_Returning_Visitor'] = 1 if user_input['VisitorType_Returning_Visitor'] == "Returning" else 0
 
 # Display user input
 st.header("Session Information Entered")
@@ -140,20 +133,25 @@ def print_user_guide():
     st.write("14. Region: Geographical region of the user.")
     st.write("15. TrafficType: Type of traffic source through which the user arrived at the website.")
     st.write("16. VisitorType: Type of visitor to the website (Returning Visitor).")
-    st.write("17. Weekend_True: Whether the session occurred on a weekend.")
+    st.write("17. Weekend: Whether the session occurred on a weekend.")
 
 # Print user guide
 print_user_guide()
 
+# Validate user input
+if 'VisitorType_Returning_Visitor' not in user_input:
+    st.error("Please select visitor type.")
+
 # Button to make prediction
 if st.button("Predict"):
-    # Convert user input to DataFrame
-    user_df = pd.DataFrame([user_input])
+    if 'VisitorType_Returning_Visitor' in user_input:
+        # Convert user input to DataFrame
+        user_df = pd.DataFrame([user_input])
 
-    # Make prediction
-    prediction_label, probability = predict_user_input(model, scaler, label_encoder, user_df)
+        # Make prediction
+        prediction_label, probability = predict_user_input(model, scaler, label_encoder, user_df)
 
-    # Display prediction
-    st.header("Prediction")
-    st.write(f"Predicted Revenue: {prediction_label}")
-    st.write(f"Probability of Revenue: {probability:.2f}")
+        # Display prediction
+        st.header("Prediction")
+        st.write(f"Predicted Revenue: {prediction_label}")
+        st.write(f"Probability of Revenue: {probability:.2f}")
