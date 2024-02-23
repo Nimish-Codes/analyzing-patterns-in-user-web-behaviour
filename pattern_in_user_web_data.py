@@ -94,9 +94,9 @@ if st.button("Predict"):
     probability = model.predict_proba(user_scaled)[0][1]
 
     # Decode prediction
-    prediction_label = label_encoder.inverse_transform([prediction])[0]
+    # prediction_label = label_encoder.inverse_transform([prediction])[0]
 
     # Display prediction
     st.header("Prediction")
-    st.write(f"Predicted Revenue(trillion $ ;-)): {prediction_label}")
-    st.write(f"Probability of Revenue: {probability:.2f}")
+    # st.write(f"Predicted Revenue: {prediction_label}")
+    st.write(f"Probability of Revenue: {probability*100+'%'}")
