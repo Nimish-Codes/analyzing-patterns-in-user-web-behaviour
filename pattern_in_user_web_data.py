@@ -34,19 +34,6 @@ X_scaled = scaler.fit_transform(X)
 model = RandomForestClassifier(n_estimators=100, random_state=42)
 model.fit(X_scaled, y)
 
-# Define function to make predictions
-def predict_user_input(model, scaler, label_encoder, user_input):
-    # Scale user input
-    user_scaled = scaler.transform(user_input)
-
-    # Make prediction
-    prediction = model.predict(user_scaled)
-    probability = model.predict_proba(user_scaled)[:, 1]
-
-    # Decode prediction
-    prediction_label = label_encoder.inverse_transform(prediction)[0]
-    return prediction_label, probability[0]
-
 # Streamlit UI
 st.title("Online Shopper's Purchase Intention Prediction")
 
@@ -70,46 +57,46 @@ user_input['SpecialDay'] = st.number_input("Special Day", value=0)
 months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 user_input['Month'] = st.selectbox("Month", months)
 
+# Convert 'Month' to numerical value
+user_input['Month'] = months.index(user_input['Month']) + 1
+
 # Weekend selection
 user_input['Weekend'] = st.radio("Weekend", ["Yes", "No"])
 
-# Operating System dropdown
-st.subheader("Select Operating System")
-os_names = {1: "Windows", 2: "Macintosh", 3: "Linux", 4: "Other"}
-user_input['OperatingSystems'] = st.selectbox("Operating System", list(os_names.values()))
+# Convert 'Weekend' to binary
+user_input['Weekend'] = 1 if user_input['Weekend'] == "Yes" else 0
 
-# Browser dropdown
-st.subheader("Select Browser")
-browser_names = {1: "IE", 2: "Firefox", 3: "Chrome", 4: "Safari", 5: "Others"}
-user_input['Browser'] = st.selectbox("Browser", list(browser_names.values()))
-
-# Region dropdown
-st.subheader("Select Region")
-region_names = {1: "Region 1", 2: "Region 2", 3: "Region 3", 4: "Region 4", 5: "Region 5", 6: "Region 6", 7: "Region 7", 8: "Region 8", 9: "Region 9"}
-user_input['Region'] = st.selectbox("Region", list(region_names.values()))
-
-# Traffic Type dropdown
-st.subheader("Select Traffic Type")
-traffic_names = {1: "Type 1", 2: "Type 2", 3: "Type 3", 4: "Type 4", 5: "Type 5", 6: "Type 6", 7: "Type 7", 8: "Type 8", 9: "Type 9"}
-user_input['TrafficType'] = st.selectbox("Traffic Type", list(traffic_names.values()))
-
-# Drop unnecessary columns
-# user_input.pop('VisitorType_Returning_Visitor')  # Remove this line
-
-# Validate user input
-if 'Month' not in user_input or 'Weekend' not in user_input:
-    st.error("Please provide month and select weekend.")
+# Visitor Type selection
+visitor_type = st.radio("Visitor Type", ["Returning_Visitor", "New_Visitor", "Other"])
+user_input['VisitorType_Returning_Visitor'] = 1 if visitor_type == "Returning_Visitor" else 0
 
 # Button to make prediction
 if st.button("Predict"):
-    if 'Month' in user_input and 'Weekend' in user_input:
-        # Convert user input to DataFrame
-        user_df = pd.DataFrame([user_input])
+    # Convert user input to DataFrame
+    user_df = pd.DataFrame([user_input])
 
-        # Make prediction
-        prediction_label, probability = predict_user_input(model, scaler, label_encoder, user_df)
+    # One-hot encode categorical variables
+    user_df = pd.get_dummies(user_df, columns=['Month'], drop_first=True)
 
-        # Display prediction
-        st.header("Prediction")
-        st.write(f"Predicted Revenue: {prediction_label}")
-        st.write(f"Probability of Revenue: {probability:.2f}")
+    # Ensure that all columns present during training are present in user input
+    missing_cols = set(X.columns) - set(user_df.columns)
+    for col in missing_cols:
+        user_df[col] = 0
+
+    # Reorder columns to match training data
+    user_df = user_df[X.columns]
+
+    # Scale user input
+    user_scaled = scaler.transform(user_df)
+
+    # Make prediction
+    prediction = model.predict(user_scaled)[0]
+    probability = model.predict_proba(user_scaled)[0][1]
+
+    # Decode prediction
+    prediction_label = label_encoder.inverse_transform([prediction])[0]
+
+    # Display prediction
+    st.header("Prediction")
+    st.write(f"Predicted Revenue: {prediction_label}")
+    st.write(f"Probability of Revenue: {probability:.2f}")
