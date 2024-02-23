@@ -42,9 +42,9 @@ st.header("Enter Session Information")
 # Function to print user guide
 def print_user_guide():
     st.header("User Guide")
-    st.write("Welcome! Please provide the following information for predicting online shopper's purchase intention:")
-    st.write("\n1. Administrative: Number of pages related to account management or settings visited during your session.")
-    st.write("   Example: Login page, account settings page.")
+    st.warning("Welcome! Please provide the following information for predicting online shopper's purchase intention:")
+    st.warning("\n1. Administrative: Number of pages related to account management or settings visited during your session.")
+    st.warning("   Example: Login page, account settings page.")
     st.write("2. Administrative Duration: Total time (in seconds) spent on administrative pages.")
     st.write("3. Informational: Number of pages containing general information visited during your session.")
     st.write("   Example: FAQ page, help guide.")
