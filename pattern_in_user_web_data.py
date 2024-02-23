@@ -98,5 +98,5 @@ if st.button("Predict"):
 
     # Display prediction
     st.header("Prediction")
-    st.write(f"Predicted Revenue: {prediction_label}")
+    st.write(f"Predicted Revenue(trillion $ ;-)): {prediction_label}")
     st.write(f"Probability of Revenue: {probability:.2f}")
