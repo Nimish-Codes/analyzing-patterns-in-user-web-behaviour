@@ -5,11 +5,11 @@ from sklearn.preprocessing import StandardScaler, LabelEncoder
 from urllib.request import urlretrieve
 
 # Download the dataset
-url = "https://archive.ics.uci.edu/ml/machine-learning-databases/00468/online_shoppers_intention.csv"
-urlretrieve(url, "online_shoppers_intention.csv")
+# url = "https://archive.ics.uci.edu/ml/machine-learning-databases/00468/online_shoppers_intention.csv"
+# urlretrieve(url, "online_shoppers_intention.csv")
 
 # Load dataset
-data = pd.read_csv("online_shoppers_intention.csv")
+data = pd.read_csv("shopper's detail.csv")
 
 # Drop rows with missing values
 data.dropna(inplace=True)
